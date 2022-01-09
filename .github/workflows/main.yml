@@ -63,5 +63,6 @@ jobs:
       - name: Conan package upload
         if: github.ref == 'refs/heads/initial_deps_build'
         run: |
+          conan remote add artifactory-ssrobins https://ssrobins.jfrog.io/artifactory/api/conan/conan --insert --force
           conan user --password ${{ secrets.ARTIFACTORY_API_KEY }} --remote artifactory-ssrobins ${{ secrets.ARTIFACTORY_USER }}
           ${{ matrix.upload_script }}
