@@ -91,7 +91,7 @@ def main():
 
     conan_create = f"conan create --update . {platform[command_args.platform]} {conan_options} --build=missing"
     print(conan_create, flush=True)
-    subprocess.run(conan_create, cwd=script_path, shell=True, check=True)
+    subprocess.run(conan_create, cwd=script_path, shell=True, check=True, env=os.environ.copy())
 
 
 if __name__ == "__main__":
