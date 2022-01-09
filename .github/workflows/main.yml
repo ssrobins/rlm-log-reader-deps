@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+env:
+  CONAN_REVISIONS_ENABLED: 1
+
+jobs:
+  builds:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    container: ${{ matrix.container }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: linux
+            os: ubuntu-18.04
+            script: ./conan.py linux
+            upload_script: ./upload.py
+          - name: macos
+            os: macos-11
+            script: ./conan.py macos
+            upload_script: ./upload.py
+          - name: windows
+            os: windows-2019
+            script: py conan.py windows
+            upload_script: py upload.py
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Print environment variables
+        run: env
+
+      - name: Install required Linux packages
+        if: matrix.name == 'linux'
+        run: sudo apt-get install ninja-build python3-setuptools -y
+
+      - name: Install required macOS packages
+        if: matrix.name == 'macos'
+        run: brew install ninja
+
+      - name: Install Conan
+        run: pip3 install conan --upgrade
+
+      - name: Print versions
+        run: |
+          cmake --version
+          conan --version
+
+      - name: Build
+        run: ${{ matrix.script }}
+        env:
+          DEVELOPER_DIR: /Applications/Xcode_13.1.app/Contents/Developer
+
+      - name: Conan package upload
+        if: github.ref == 'refs/heads/main'
+        run: |
+          conan user --password ${{ secrets.ARTIFACTORY_API_KEY }} --remote artifactory-ssrobins ${{ secrets.ARTIFACTORY_USER }}
+          ${{ matrix.upload_script }}
