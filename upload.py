@@ -3,6 +3,7 @@
 import json
 import os.path
 import subprocess
+import tempfile
 
 def main():
     os.environ["CONAN_REVISIONS_ENABLED"] = "1"
@@ -14,12 +15,14 @@ def main():
     print(conan_remote, flush=True)
     subprocess.run(conan_remote, cwd=script_path, shell=True, check=True)
 
-    conan_info = f"conan info . --json"
-    print(conan_info, flush=True)
-    conan_info_output = subprocess.run(conan_info, cwd=script_path, shell=True, check=True, stdout=subprocess.PIPE)
+    with tempfile.TemporaryDirectory() as json_path:
+        conan_info_outfile = f"{json_path}/deps.json"
+        conan_info = f"conan info . --json {conan_info_outfile}"
+        print(conan_info, flush=True)
+        subprocess.run(conan_info, cwd=script_path, shell=True, check=True)
 
-    print(conan_info_output.stdout)
-    conan_info_json = json.loads(conan_info_output.stdout)
+        with open(conan_info_outfile) as conan_info_output:
+            conan_info_json = json.load(conan_info_output)
 
     for item in conan_info_json:
         package_reference = item["reference"]
