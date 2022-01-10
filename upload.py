@@ -15,6 +15,7 @@ def main():
     subprocess.run(conan_remote, cwd=script_path, shell=True, check=True)
 
     conan_info = f"conan info . --json"
+    print(conan_info, flush=True)
     conan_info_output = subprocess.run(conan_info, cwd=script_path, shell=True, check=True, stdout=subprocess.PIPE)
 
     conan_info_json = json.loads(conan_info_output.stdout)
@@ -23,6 +24,7 @@ def main():
         package_reference = item["reference"]
         if "conanfile.py" not in package_reference:
             conan_upload = f"conan upload {package_reference} --all --remote artifactory-ssrobins --confirm --parallel"
+            print(conan_upload, flush=True)
             subprocess.run(conan_upload, cwd=script_path, shell=True, check=True)
 
 if __name__ == "__main__":
