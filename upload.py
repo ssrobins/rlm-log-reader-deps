@@ -18,6 +18,7 @@ def main():
     print(conan_info, flush=True)
     conan_info_output = subprocess.run(conan_info, cwd=script_path, shell=True, check=True, stdout=subprocess.PIPE)
 
+    print(conan_info_output.stdout)
     conan_info_json = json.loads(conan_info_output.stdout)
 
     for item in conan_info_json:
