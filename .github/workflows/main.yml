@@ -29,7 +29,7 @@ jobs:
             script: ./conan.py macos
             upload_script: ./upload.py
           - name: windows
-            os: windows-2019
+            os: windows-2022
             script: py conan.py windows
             upload_script: py upload.py
     steps:
