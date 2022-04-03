@@ -64,6 +64,11 @@ def main():
     "-o qt:qtxmlpatterns=False"
     ])
 
+    remote_url = "https://center.conan.io"
+    conan_remote = f"conan remote add conancenter {remote_url} --insert --force"
+    print(conan_remote, flush=True)
+    subprocess.run(conan_remote, cwd=script_path, shell=True, check=True)
+
     conan_create = f"conan create --update . {platform[command_args.platform]} {conan_options} --build=missing"
     print(conan_create, flush=True)
     subprocess.run(conan_create, cwd=script_path, shell=True, check=True, env=os.environ.copy())
