@@ -11,7 +11,7 @@ def main():
     platform = {
         "linux": "-s compiler=gcc -s compiler.version=7 -s compiler.libcxx=libstdc++11 -s compiler.cppstd=17",
         "macos": "-s os.version=10.13 -s compiler.version=13.0 -s compiler.cppstd=17",
-        "windows": "-s arch=x86 -s compiler=\"Visual Studio\" -s compiler.version=16 -s compiler.runtime=MT -s compiler.cppstd=17"
+        "windows": "-s arch=x86 -s compiler=\"Visual Studio\" -s compiler.version=17 -s compiler.runtime=MT -s compiler.cppstd=17"
     }
 
     parser = argparse.ArgumentParser()
@@ -63,6 +63,11 @@ def main():
     "-o qt:qtx11extras=False",
     "-o qt:qtxmlpatterns=False"
     ])
+
+    remote_url = "https://center.conan.io"
+    conan_remote = f"conan remote add conancenter {remote_url} --insert --force"
+    print(conan_remote, flush=True)
+    subprocess.run(conan_remote, cwd=script_path, shell=True, check=True)
 
     conan_create = f"conan create --update . {platform[command_args.platform]} {conan_options} --build=missing"
     print(conan_create, flush=True)
