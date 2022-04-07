@@ -10,3 +10,4 @@ class Conan(ConanFile):
         self.requires("date/3.0.1")
         self.requires("gtest/1.11.0")
         self.requires("qt/5.15.3")
+        self.requires("openssl/1.1.1n")
