@@ -10,7 +10,7 @@ def main():
 
     platform = {
         "linux": "-s compiler=gcc -s compiler.version=7 -s compiler.libcxx=libstdc++11 -s compiler.cppstd=17",
-        "macos": "-s os.version=10.13 -s compiler.version=13.0 -s compiler.cppstd=17",
+        "macos": "-s os.version=10.13 -s compiler.version=13.1 -s compiler.cppstd=17",
         "windows": "-s arch=x86 -s compiler=\"Visual Studio\" -s compiler.version=17 -s compiler.runtime=MT -s compiler.cppstd=17"
     }
 
