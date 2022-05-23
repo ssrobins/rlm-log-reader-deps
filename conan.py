@@ -16,9 +16,15 @@ def main():
 
     parser = argparse.ArgumentParser()
     parser.add_argument("platform", choices=list(platform.keys()), help="Build platform")
+    parser.add_argument("--config", help="Build config")
     command_args = parser.parse_args()
 
     script_path = os.path.dirname(os.path.realpath(__file__))
+
+    if command_args.config:
+        config = f"-s build_type={command_args.config}"
+    else:
+        config = "-s build_type=Debug"
 
     conan_options = " ".join([
     "-o qt:qt3d=False",
@@ -69,7 +75,7 @@ def main():
     print(conan_remote, flush=True)
     subprocess.run(conan_remote, cwd=script_path, shell=True, check=True)
 
-    conan_create = f"conan create --update . {platform[command_args.platform]} {conan_options} --build=missing"
+    conan_create = f"conan create --update . {platform[command_args.platform]} {conan_options} {config} --build=missing"
     print(conan_create, flush=True)
     subprocess.run(conan_create, cwd=script_path, shell=True, check=True, env=os.environ.copy())
 
